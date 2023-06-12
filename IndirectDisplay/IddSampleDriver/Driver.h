@@ -36,23 +36,6 @@ namespace Microsoft
         /// <summary>
         /// Manages the creation and lifetime of a Direct3D render device.
         /// </summary>
-        struct IndirectSampleMonitor
-        {
-            static constexpr size_t szEdidBlock = 128;
-            static constexpr size_t szModeList = 3;
-
-            const BYTE pEdidBlock[szEdidBlock];
-            const struct SampleMonitorMode {
-                DWORD Width;
-                DWORD Height;
-                DWORD VSync;
-            } pModeList[szModeList];
-            const DWORD ulPreferredModeIdx;
-        };
-
-        /// <summary>
-        /// Manages the creation and lifetime of a Direct3D render device.
-        /// </summary>
         struct Direct3DDevice
         {
             Direct3DDevice(LUID AdapterLuid);
@@ -81,6 +64,7 @@ namespace Microsoft
             void Run();
             void RunCore();
 
+        public:
             IDDCX_SWAPCHAIN m_hSwapChain;
             std::shared_ptr<Direct3DDevice> m_Device;
             HANDLE m_hAvailableBufferEvent;
@@ -98,25 +82,25 @@ namespace Microsoft
             virtual ~IndirectDeviceContext();
 
             void InitAdapter();
-            void FinishInit(UINT ConnectorIndex);
+            void FinishInit();
 
-        protected:
-            WDFDEVICE m_WdfDevice;
-            IDDCX_ADAPTER m_Adapter;
-        };
-
-        class IndirectMonitorContext
-        {
-        public:
-            IndirectMonitorContext(_In_ IDDCX_MONITOR Monitor);
-            virtual ~IndirectMonitorContext();
+            void CreateMonitor(unsigned int index);
 
             void AssignSwapChain(IDDCX_SWAPCHAIN SwapChain, LUID RenderAdapter, HANDLE NewFrameEvent);
             void UnassignSwapChain();
 
-        private:
+        protected:
+
+            WDFDEVICE m_WdfDevice;
+            IDDCX_ADAPTER m_Adapter;
             IDDCX_MONITOR m_Monitor;
+            IDDCX_MONITOR m_Monitor2;
+
             std::unique_ptr<SwapChainProcessor> m_ProcessingThread;
-        } ;
+
+        public:
+            static const DISPLAYCONFIG_VIDEO_SIGNAL_INFO s_KnownMonitorModes[];
+            static const BYTE s_KnownMonitorEdid[];
+        };
     }
 }
