@@ -110,14 +110,20 @@ vector<string> split(string& input, char delimiter)
 void loadOptions() {
     vector<tuple<int, int, int>> res;
     numVirtualDisplays = 1;
-    res.push_back({3840,2400,240});
-    res.push_back({3840,2160,240});
+    res.push_back({3840,2880,240}); // 16 / 12 
+    res.push_back({3840,2400,240}); // 16 / 10 
+    res.push_back({3840,2160,240}); // 16 / 9
+    res.push_back({3840,1920,240}); // 16 / 8
 
+    res.push_back({2560,1920,240});
     res.push_back({2560,1600,240});
-    res.push_back({1650,1440,240});
+    res.push_back({2650,1440,240});
+    res.push_back({2650,1325,240});
 
+    res.push_back({1920,1440,240});
     res.push_back({1920,1200,240});
     res.push_back({1920,1080,240});
+    res.push_back({1920, 960,240});
 
     monitorModes = res; 
     return;
