@@ -2,3 +2,5 @@
 .vs/
 .vscode/
 Debug/
+IndirectDisplay/IddSampleDriver/x64/
+IndirectDisplay/IddSampleApp/x64/

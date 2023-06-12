@@ -73,18 +73,9 @@ int __cdecl main(int argc, wchar_t *argv[])
     printf("Device created\n\n");
     
     // Now wait for user to indicate the device should be stopped
-    printf("Press 'x' to exit and destory the software device\n");
-    bool bExit = false;
-    do
-    {
-        // Wait for key press
-        int key = _getch();
-
-        if (key == 'x' || key == 'X')
-        {
-            bExit = true;
-        }
-    }while (!bExit);
+    while (true) {
+        Sleep(1000);
+    }
     
     // Stop the device, this will cause the sample to be unloaded
     SwDeviceClose(hSwDevice);
