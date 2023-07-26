@@ -13,6 +13,16 @@ Environment:
 
     User Mode, UMDF
 
+TODO : 
++ Set preferred adapter (set to GPU adapter to avoid iddsampledriver set to microsoft basic display)
+https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/iddcx/nf-iddcx-iddcxadaptersetrenderadapter
+
++ Process frame encode directly in
+void SwapChainProcessor::RunCore()
+
+
+
+
 --*/
 
 #include "Driver.h"
@@ -72,8 +82,11 @@ extern "C" BOOL WINAPI DllMain(
     return TRUE;
 }
 
+
+
+// https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 _Use_decl_annotations_
-extern "C" NTSTATUS DriverEntry(
+extern "C" NTSTATUS DriverEntry( 
     PDRIVER_OBJECT  pDriverObject,
     PUNICODE_STRING pRegistryPath
 )
@@ -96,6 +109,17 @@ extern "C" NTSTATUS DriverEntry(
 
     return Status;
 }
+
+
+
+
+
+
+
+
+
+
+
 vector<string> split(string& input, char delimiter)
 {
     istringstream stream(input);
