@@ -123,9 +123,38 @@ int __cdecl main(int argc, wchar_t *argv[])
 		}
 	} while (result);
 
-    // Now wait for user to indicate the device should be stopped
-    while (true) 
+
+
+
+	do
+	{
+        result = 0;
+        deviceIndex = 0;
+		PDISPLAY_DEVICE displayDevice = new DISPLAY_DEVICE();
+		displayDevice->cb = sizeof(DISPLAY_DEVICE);
+
+        bool found = false;
+        do
+        {
+            result = EnumDisplayDevices(NULL, 
+                deviceIndex++, displayDevice, 0);
+            if (displayDevice->StateFlags & DISPLAY_DEVICE_ACTIVE)
+            {
+                PDISPLAY_DEVICE monitor = new DISPLAY_DEVICE();
+                monitor->cb = sizeof(DISPLAY_DEVICE);
+
+
+                if(!wcscmp(displayDevice->DeviceString,L"IddSampleDriver Device"))
+                    found = true;
+            }
+	    } while (result);
+        if (!found)
+            break;
+
         Sleep(1000);
+	} while (true);
+    printf("virtual display closed by user \n");
+
     
     // Stop the device, this will cause the sample to be unloaded
     SwDeviceClose(hSwDevice);
