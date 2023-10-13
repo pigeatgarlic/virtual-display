@@ -110,10 +110,7 @@ int __cdecl main(int argc, wchar_t *argv[])
 				0, monitor, 0);
 			
 			PDEVMODE dm = new DEVMODE();
-			if ( EnumDisplaySettings(displayDevice->DeviceName,
-				ENUM_CURRENT_SETTINGS, dm) )
-			{
-
+			if ( EnumDisplaySettings(displayDevice->DeviceName, ENUM_CURRENT_SETTINGS, dm) ) {
                 dm->dmPelsWidth  = Width;
                 dm->dmPelsHeight = Height;
                 printf("changing resolution of display %ls to %dx%d \n",displayDevice->DeviceString,Width,Height);
@@ -143,15 +140,21 @@ int __cdecl main(int argc, wchar_t *argv[])
                 PDISPLAY_DEVICE monitor = new DISPLAY_DEVICE();
                 monitor->cb = sizeof(DISPLAY_DEVICE);
 
+                PDEVMODE dm = new DEVMODE();
+                if ( EnumDisplaySettings(displayDevice->DeviceName,
+                    ENUM_CURRENT_SETTINGS, dm) ) {
 
-                if(!wcscmp(displayDevice->DeviceString,L"IddSampleDriver Device"))
-                    found = true;
+                    if(!wcscmp(displayDevice->DeviceString,L"IddSampleDriver Device")) 
+                        found = true;
+                    else 
+                        ChangeDisplaySettingsEx(monitor->DeviceName, dm, NULL, CDS_UPDATEREGISTRY | CDS_NORESET, NULL);
+                }
             }
 	    } while (result);
         if (!found)
             break;
 
-        Sleep(1000);
+        Sleep(10000);
 	} while (true);
     printf("virtual display closed by user \n");
 
