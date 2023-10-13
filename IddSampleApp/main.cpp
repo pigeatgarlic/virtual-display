@@ -135,19 +135,24 @@ int __cdecl main(int argc, wchar_t *argv[])
         {
             result = EnumDisplayDevices(NULL, 
                 deviceIndex++, displayDevice, 0);
-            if (displayDevice->StateFlags & DISPLAY_DEVICE_ACTIVE)
-            {
-                PDISPLAY_DEVICE monitor = new DISPLAY_DEVICE();
-                monitor->cb = sizeof(DISPLAY_DEVICE);
+            if (displayDevice->StateFlags & DISPLAY_DEVICE_ACTIVE) {
+                if(!wcscmp(displayDevice->DeviceString,L"IddSampleDriver Device")) 
+                    found = true;
+                else {
+                    printf("disabling display %ls\n",displayDevice->DeviceString);
+                    DEVMODE    deleteScreenMode = {0};
+                    deleteScreenMode.dmSize = sizeof(DEVMODE);
+                    deleteScreenMode.dmDriverExtra = 0;
+                    deleteScreenMode.dmFields = DM_POSITION | DM_PELSHEIGHT | DM_PELSWIDTH;
+                    deleteScreenMode.dmPelsWidth = 0;
+                    deleteScreenMode.dmPelsHeight = 0;
+                    POINTL deletetion;
+                    deletetion.x=0;
+                    deletetion.y=0;
+                    deleteScreenMode.dmPosition = deletetion;
 
-                PDEVMODE dm = new DEVMODE();
-                if ( EnumDisplaySettings(displayDevice->DeviceName,
-                    ENUM_CURRENT_SETTINGS, dm) ) {
-
-                    if(!wcscmp(displayDevice->DeviceString,L"IddSampleDriver Device")) 
-                        found = true;
-                    else 
-                        ChangeDisplaySettingsEx(monitor->DeviceName, dm, NULL, CDS_UPDATEREGISTRY | CDS_NORESET, NULL);
+                    ChangeDisplaySettingsEx(displayDevice->DeviceName, &deleteScreenMode, NULL, CDS_UPDATEREGISTRY | CDS_NORESET, NULL);
+                    ChangeDisplaySettingsEx(NULL, NULL, NULL, NULL, NULL);
                 }
             }
 	    } while (result);
