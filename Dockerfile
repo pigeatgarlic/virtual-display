@@ -54,4 +54,8 @@ RUN powershell -file C:\InstallWdkVsix.ps1
 # Define the entry point for the docker container.
 # This entry point starts the developer command prompt and launches the PowerShell shell.
 USER ContainerAdministrator
+COPY . C:/code
+WORKDIR C:/code
+
 ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+
