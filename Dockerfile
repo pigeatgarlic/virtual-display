@@ -57,5 +57,6 @@ USER ContainerAdministrator
 COPY . C:/code
 WORKDIR C:/code
 
-ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+RUN call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat" && MSBuild.exe  .\IddSampleDriver.sln    /p:Configuration=Release    /p:Platform=x64    /p:TargetVersion=Windows10
 
+CMD 
